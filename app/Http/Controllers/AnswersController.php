@@ -83,4 +83,4 @@ class AnswersController extends Controller
         $answer->delete();
         return back()->with('success',"Your answer has been removed");
     }
-}
+} 
