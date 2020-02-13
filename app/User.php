@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
+  
+
     use Notifiable;
 
     /**
@@ -86,9 +87,11 @@ class User extends Model
          $voteQuenstions->attach($question,['vote'=>$vote]);
        }
       $question->load('votes');
-     $downVotes = (int) $question->downVotes->sum('vote');
-      $upVotes = (int) $question->upVotes->sum('vote');
-     $question->votes_count = $upVotes + $downVotes;
+      $downVotes = (int) $question->downVotes()->sum('vote');
+      $upVotes = (int) $question->upVotes()->sum('vote');
+     // dd($upVotes);
+      $question->votes_count = $upVotes + $downVotes;
+    //  dd($question->votes_count);
       $question->save();
     }
 
