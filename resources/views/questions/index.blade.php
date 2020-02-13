@@ -23,7 +23,7 @@
                     @foreach($questions as $question)
                         <div class="media">
                             <div class="d-flex flex-column counters">
-                                <div class="vote"> <strong> {{ $question->votes }}</strong> {{ str_plural('vote',$question->votes) }} </div>
+                                <div class="vote"> <strong> {{ $question->votes_count }}</strong> {{ str_plural('vote',$question->votes_count) }} </div>
                                 <div class="status {{ $question->status }}"> <strong> {{ $question->answers_count }}</strong> {{ str_plural('answers',$question->answers_count) }} </div>
                                 <div class="view">  {{ $question->views . " " . str_plural('views',$question->views) }} </div>
                             </div>

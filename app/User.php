@@ -4,9 +4,10 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Model
 {
     use Notifiable;
 
@@ -63,6 +64,32 @@ class User extends Authenticatable
     public function favorites(){
 
         return $this->belongsToMany(Question::class,'favorites')->withTimestamps(); //,'user_id','question_id')
+    }
+
+    public function voteQuestions(){
+
+        return $this->morphedByMany(Question::class, 'votable');
+    }
+
+    public function voteAnswers(){
+
+        return $this->morphedByMany(Answer::class, 'votable');
+    }
+
+    public function voteQuestion(Question $question, $vote){
+
+       $voteQuenstions =  $this->voteQuestions();
+       if($voteQuenstions->where('votable_id',$question->id)->exists()){
+           $voteQuenstions->updateExistingPivot($question,['vote'=> $vote]);
+       }
+       else{
+         $voteQuenstions->attach($question,['vote'=>$vote]);
+       }
+      $question->load('votes');
+     $downVotes = (int) $question->downVotes->sum('vote');
+      $upVotes = (int) $question->upVotes->sum('vote');
+     $question->votes_count = $upVotes + $downVotes;
+      $question->save();
     }
 
     
